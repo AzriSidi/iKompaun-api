@@ -46,7 +46,7 @@ class ApiModel extends CI_Model{
 	}
 
 	public function api_users($input,$token){
-		$query = $this->db->query("SELECT *  FROM gerai.api_users WHERE
+		$query = $this->db->query("SELECT *  FROM hasil.api_users WHERE
 						  user_name ="."'".$input["user_name"]."'"."AND 
 						  company_name = "."'".$input["company_name"]."'".
 						  "AND auth = '1'");
@@ -59,14 +59,14 @@ class ApiModel extends CI_Model{
 			 ->set('company_name', "'".$input['company_name']."'", FALSE)
 			 ->set('token', "'".$token."'", FALSE)
 			 ->set('auth', '1', FALSE)
-			 ->insert('gerai.api_users', null, FALSE);
+			 ->insert('hasil.api_users', null, FALSE);
 			return true;
 		}
 	}
 	
 	public function check_token($input){
 		$this->db->select("*")
-        		 ->from('GERAI.API_USERS')
+        		 ->from('HASIL.API_USERS')
 				 ->where("USER_NAME",$input['user_name'])
 				 ->where("COMPANY_NAME",$input['company_name']);
 		$query = $this->db->get();
@@ -86,7 +86,7 @@ class ApiModel extends CI_Model{
 
 	public function auth_token($input){
 		$this->db->select("*")
-        		 ->from('GERAI.API_USERS')
+        		 ->from('HASIL.API_USERS')
 				 ->where("USER_NAME",$input->user_name)
 				 ->where("COMPANY_NAME",$input->company_name)
 				 ->where("AUTH",'1');
