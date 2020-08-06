@@ -48,8 +48,8 @@ class ApiController extends REST_Controller {
 		$input['BRN_NO'] = $item->BRN_NO;
 
 		$headers = $this->input->request_headers();
-		if(isset($headers['Token'])){
-			$token = $headers['Token'];
+		if(isset($headers['token'])){
+			$token = $headers['token'];
 		}else{
 			$token = false;
 		}
