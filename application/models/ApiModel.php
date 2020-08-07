@@ -49,6 +49,7 @@ class ApiModel extends CI_Model{
 			 ->where("NO_AKAUN = '".$no_akaun."'",null,false);
 			$query = $this->db->get();
 			$getResult = $query->row();
+			return $getResult;
 		}/* else{
 			$this->db
 			 ->select($clmn_bilPaid." from ".$table_bil,false)
@@ -57,7 +58,6 @@ class ApiModel extends CI_Model{
 			$row = $query->row();
 			$getResult = array("KP"=>$row->KP,"BRN_NO"=>$row->BRN_NO,"message"=>"Paid");
 		} */
-		return $getResult;
 	}
 
 	public function api_users($input,$token){
