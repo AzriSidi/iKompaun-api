@@ -19,7 +19,7 @@ class ApiModel extends CI_Model{
 			$sql = $query->result();
 			foreach($sql as $key => $row){
 				$data['NO_AKAUN'] = $row->NO_AKAUN;
-				$result[]['data'] = $this->checkPay(isset($data) ? $data : '');
+				$result['data'][] = $this->checkPay(isset($data) ? $data : '');
 			}			
 		}else{
 			$result['message'] = "No Data";
@@ -29,7 +29,8 @@ class ApiModel extends CI_Model{
 	}
 
 	function checkPay($data){
-		$clmn_bil = 'NO_AKAUN, KP, perkara5 as BRN_NO ,TKH_MASUK, AMAUN';		
+		$clmn_bil = 'NO_AKAUN, KP, perkara5 as BRN_NO ,TKH_MASUK, AMAUN';
+		$clmn_bilPaid = 'KP, perkara5 as BRN_NO';		
 		$table_bil = 'HASIL.BIL';		
 
 		$kutip = "SELECT 'x' FROM kutipan.kutipan WHERE NO_AKAUN = '".$data['NO_AKAUN']."' 
@@ -49,7 +50,12 @@ class ApiModel extends CI_Model{
 			$query = $this->db->get();
 			$getResult = $query->row();
 		}else{
-			$getResult['message'] = "Paid";
+			$this->db
+			 ->select($clmn_bilPaid." from ".$table_bil,false)
+			 ->where("NO_AKAUN = '".$data['NO_AKAUN']."'",null,false);
+			$query = $this->db->get();
+			$row = $query->row();
+			$getResult = array("KP"=>$row->KP,"BRN_NO"=>$row->BRN_NO,"message"=>"Paid");
 		}
 		return $getResult;
 	}
