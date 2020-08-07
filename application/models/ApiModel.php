@@ -18,8 +18,8 @@ class ApiModel extends CI_Model{
 		if ($query->num_rows() > 0){
 			$sql = $query->result();
 			foreach($sql as $key => $row){
-				$data['NO_AKAUN'] = $row->NO_AKAUN;
-				$result['data'][] = $this->checkPay(isset($data) ? $data : '');
+				$no_akaun = $row->NO_AKAUN;
+				$result['data'][] = $this->checkPay(isset($no_akaun) ? $no_akaun : '');
 			}			
 		}else{
 			$result['message'] = "No Data";
@@ -28,16 +28,16 @@ class ApiModel extends CI_Model{
 		return $result;	
 	}
 
-	function checkPay($data){
+	function checkPay($no_akaun){
 		$clmn_bil = 'NO_AKAUN, KP, perkara5 as BRN_NO ,TKH_MASUK, AMAUN';
 		$clmn_bilPaid = 'KP, perkara5 as BRN_NO';		
 		$table_bil = 'HASIL.BIL';		
 
-		$kutip = "SELECT 'x' FROM kutipan.kutipan WHERE NO_AKAUN = '".$data['NO_AKAUN']."' 
+		$kutip = "SELECT 'x' FROM kutipan.kutipan WHERE NO_AKAUN = '".$no_akaun."' 
 				  AND status <> 'B'";
-		$bil2 = "select 'x' from hasil.bil2 where  NO_AKAUN = '".$data['NO_AKAUN']."' 
+		$bil2 = "select 'x' from hasil.bil2 where  NO_AKAUN = '".$no_akaun."' 
 				 and status is null";
-		$ebayar = "select 'x' from hasil.ebayar_trxid where no_kompaun = '".$data['NO_AKAUN']."' 
+		$ebayar = "select 'x' from hasil.ebayar_trxid where no_kompaun = '".$no_akaun."' 
 				   and flag = 'SUCCESSFUL' and status_kutipan is null";
 		$sql = $kutip." union ".$bil2." union ".$ebayar;
 		
@@ -46,13 +46,13 @@ class ApiModel extends CI_Model{
 		if($check==null){
 			$this->db
 			 ->select($clmn_bil." from ".$table_bil,false)
-			 ->where("NO_AKAUN = '".$data['NO_AKAUN']."'",null,false);
+			 ->where("NO_AKAUN = '".$no_akaun."'",null,false);
 			$query = $this->db->get();
 			$getResult = $query->row();
 		}else{
 			$this->db
 			 ->select($clmn_bilPaid." from ".$table_bil,false)
-			 ->where("NO_AKAUN = '".$data['NO_AKAUN']."'",null,false);
+			 ->where("NO_AKAUN = '".$no_akaun."'",null,false);
 			$query = $this->db->get();
 			$row = $query->row();
 			$getResult = array("KP"=>$row->KP,"BRN_NO"=>$row->BRN_NO,"message"=>"Paid");
