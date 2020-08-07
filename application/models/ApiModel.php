@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class ApiModel extends CI_Model{
 
 	public function getPay($input){
-		$clmn_bil = 'NO_AKAUN, TKH_MASUK, AMAUN';		
+		$clmn_bil = 'NO_AKAUN';		
 		$table_bil = 'HASIL.BIL';
 		
 		$this->db
@@ -16,33 +16,42 @@ class ApiModel extends CI_Model{
 			
 		$query = $this->db->get();
 		if ($query->num_rows() > 0){
-			$row = $query->result_array();
-			foreach($row as $value) {
-				$check = $this->checkPay(isset($value['NO_AKAUN']) ? $value['NO_AKAUN'] : '');
-				if($check==null){
-					$result = $row;
-				}else{
-					$result[] = "Paid";
-				}
-			}
+			$sql = $query->result();
+			foreach($sql as $key => $row){
+				$data['NO_AKAUN'] = $row->NO_AKAUN;
+				$result[]['data'] = $this->checkPay(isset($data) ? $data : '');
+			}			
 		}else{
-			$result['mgs'] = "No Data";
+			$result['message'] = "No Data";
 		}
-
-		$this->db->close();
-		return $result;
+		$this->db->close();	
+		return $result;	
 	}
 
-	function checkPay($no_akaun){
-		$kutip = "SELECT 'x' FROM kutipan.kutipan WHERE NO_AKAUN = '".$no_akaun."' 
+	function checkPay($data){
+		$clmn_bil = 'NO_AKAUN, KP, perkara5 as BRN_NO ,TKH_MASUK, AMAUN';		
+		$table_bil = 'HASIL.BIL';		
+
+		$kutip = "SELECT 'x' FROM kutipan.kutipan WHERE NO_AKAUN = '".$data['NO_AKAUN']."' 
 				  AND status <> 'B'";
-		$bil2 = "select 'x' from hasil.bil2 where  NO_AKAUN = '".$no_akaun."' 
+		$bil2 = "select 'x' from hasil.bil2 where  NO_AKAUN = '".$data['NO_AKAUN']."' 
 				 and status is null";
-		$ebayar = "select 'x' from hasil.ebayar_trxid where no_kompaun = '".$no_akaun."' 
+		$ebayar = "select 'x' from hasil.ebayar_trxid where no_kompaun = '".$data['NO_AKAUN']."' 
 				   and flag = 'SUCCESSFUL' and status_kutipan is null";
 		$sql = $kutip." union ".$bil2." union ".$ebayar;
+		
 		$query = $this->db->query($sql);
-		return $query->result();
+		$check = $query->row();
+		if($check==null){
+			$this->db
+			 ->select($clmn_bil." from ".$table_bil,false)
+			 ->where("NO_AKAUN = '".$data['NO_AKAUN']."'",null,false);
+			$query = $this->db->get();
+			$getResult = $query->row();
+		}else{
+			$getResult['message'] = "Paid";
+		}
+		return $getResult;
 	}
 
 	public function api_users($input,$token){
