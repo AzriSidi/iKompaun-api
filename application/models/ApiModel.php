@@ -137,6 +137,7 @@ class ApiModel extends CI_Model{
 				 ->where("NO_AKAUN",$input['NO_AKAUN'])
 				 ->where("NAMA",$input['NAMA'])
 				 ->where("PERKARA1",$input['PERKARA1'])
+				 ->where('TKH_MASUK', $input['TKH_MASUK'])
 				 ->where("JENIS",$input['JENIS']);
 		$query = $this->db->get();
 
