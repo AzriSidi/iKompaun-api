@@ -30,4 +30,13 @@ class JwtModel extends CI_Model {
 			return self::$response;
 		}
 	}
+
+	public function getDecodeToken($token){
+		try {
+			$data = AUTHORIZATION::validateToken($token);						
+			return $data;
+		} catch (Exception $e) {
+			return self::$response;
+		}
+	}
 }

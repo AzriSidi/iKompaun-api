@@ -112,4 +112,64 @@ class ApiModel extends CI_Model{
 			return false;
 		}
 	}
+
+	public function saveLogApi($log){
+		if($log['request'] != ''){
+			$_REQUEST = $log['request'];
+		}else{
+			$_REQUEST = '';
+		}
+		$this->db->set('NO_AKAUN', $log['no_akaun'])
+				 ->set('URL_API', $log['url_api'])
+				 ->set('USER_NAME', $log['decodeToken']->user_name)
+				 ->set('COMPANY_NAME', $log['decodeToken']->company_name)
+				 ->set('SYSTEM', $log['system'])
+				 ->set('REQUEST', $_REQUEST)
+				 ->set('RESPONSE', $log['response'])
+				 ->insert("KOMPAUN.API_LOG");
+	}
+
+	public function inputData($input){
+		$mgs = false;
+
+		$this->db->select("*")
+        		 ->from('HASIL.BIL')
+				 ->where("NO_AKAUN",$input['NO_AKAUN'])
+				 ->where("NAMA",$input['NAMA'])
+				 ->where("PERKARA1",$input['PERKARA1'])
+				 ->where("JENIS",$input['JENIS']);
+		$query = $this->db->get();
+
+		if ($query->num_rows() > 0){
+			$this->db->set('NO_AKAUN', $input['NO_AKAUN'])
+				 ->set('NAMA', $input['NAMA'])
+				 ->set('ALAMAT1', $input['ALAMAT1'])
+				 ->set('ALAMAT2', $input['ALAMAT2'])
+				 ->set('ALAMAT3', $input['ALAMAT3'])
+				 ->set('PERKARA1', $input['PERKARA1'])
+				 ->set('PERKARA2', $input['PERKARA2'])
+				 ->set('NO_RUJUKAN', $input['NO_RUJUKAN'])
+				 ->set('AMAUN', $input['AMAUN'])
+				 ->set('TKH_BAYAR', $input['TKH_BAYAR'])
+				 ->set('TKH_MASUK', $input['TKH_MASUK'])
+				 ->set('NO_RESIT', $input['NO_RESIT'])
+				 ->set('NO_RUJUKAN2', $input['NO_RUJUKAN2'])
+				 ->set('JENIS', $input['JENIS'])
+				 ->set('PERKARA', $input['PERKARA'])
+				 ->set('MASA', $input['MASA'])
+				 ->set('NO_PEKERJA', $input['NO_PEKERJA'])
+				 ->set('TRED', $input['TRED'])
+				 ->set('PERKARA4', $input['PERKARA4'])
+				 ->set('PERKARA5', $input['PERKARA5'])
+				 ->set('KP', $input['KP'])
+				 ->set('TKH_LAHIR', $input['TKH_LAHIR'])
+				 ->set('PARLIMEN', $input['PARLIMEN'])
+				 ->set('DAERAH', $input['DAERAH'])
+				 ->set('DUN', $input['DUN'])
+				 ->set('KOD_TERNAKAN', $input['KOD_TERNAKAN'])
+				 ->insert("HASIL.BIL");
+			$mgs = true;
+		}
+		return $mgs;
+	}
 }

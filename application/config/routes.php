@@ -55,3 +55,4 @@ $route['translate_uri_dashes'] = FALSE;
 $route['getPay'] = 'apicontroller/getPay';
 $route['generateToken'] = 'apicontroller/generateToken';
 $route['checkToken'] = 'apicontroller/checkToken';
+$route['inputData'] = 'apicontroller/inputData';
