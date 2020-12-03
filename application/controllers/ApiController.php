@@ -113,9 +113,9 @@ class ApiController extends REST_Controller {
 			$authToken = $this->JwtModel->decodeToken($token);
 			if($authToken){
 				$data = $this->ApiModel->inputData($input);
-				if($data){					
+				if($data['bool']){					
 					$status = parent::HTTP_OK;
-					$response = array('status' => $status,'mgs'=>'success');
+					$response = array('status' => $status,'mgs'=>$data['text']);
 				}else{
 					$status = parent::HTTP_FORBIDDEN;
 					$response = ['status' => $status, 'msg' => 'FORBIDDEN'];
