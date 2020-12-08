@@ -146,10 +146,9 @@ class ApiModel extends CI_Model{
 		}else{
 			if(is_null($input['NO_AKAUN']) || is_null($input['NAMA']) || 
 				is_null($input['PERKARA1']) || is_null($input['TKH_MASUK']) ||
-				is_null($input['JENIS'])){
+				is_null($input['NO_RUJUKAN2'])){
 				$bool = true;
 			}
-			// var_dump($bool);
 			
 			$tkh_byr = $input['TKH_BAYAR'];
 			$tkh_msk = $input['TKH_MASUK'];
